@@ -10,7 +10,7 @@ class WorldTime{
   late String url; //location url for api endpoint
   late bool isDaytime; //true or false if daytime or not
 
-  WorldTime({required this.location, required this.flag, required this.url});
+  WorldTime({required this.url, required this.location , required this.flag});
 
   Future<void> getTime() async{
 
@@ -22,20 +22,17 @@ class WorldTime{
 
       //get properties from data
       String datetime=data['datetime'];
-      int offset=data['dst_offset'];
+      String offset = data['utc_offset'].substring(1,3);
 
+      // create DateTime object
       DateTime now = DateTime.parse(datetime);
-      now = now.add(Duration(hours: offset));
+      now = now.add(Duration(hours: int.parse(offset)));
 
 
       isDaytime = (now.hour > 6 && now.hour <20) ? true : false;
       time = DateFormat.jm().format(now);
     } catch(e){
-      print('caught error: $e');
       time = 'could not get time data';
     }
-
-
   }
-
 }
